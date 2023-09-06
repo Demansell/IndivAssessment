@@ -42,7 +42,7 @@ app.MapGet("/api/Song", (IndivAssessmentDbContext db) =>
 
 
 // Add a song
-app.MapPost("/api/Song", (IndivAssessmentDbContext db, Song songs) =>
+app.MapPost("/IndivAssessment/Song", (IndivAssessmentDbContext db, Song songs) =>
 {
     db.Songs.Add(songs);
     db.SaveChanges();

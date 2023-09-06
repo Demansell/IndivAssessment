@@ -12,9 +12,9 @@ namespace IndivAssessment.Models
         public string? Album { get; set; }
         public int? Length { get; set; }
 
-        public ICollection<Genre> Genres { get; set; }
+        public List<Genre> Genres { get; set; }
 
-        public ICollection<Artist> Artists { get; set; }
+        public List<Artist> Artists { get; set; }
     }
 
 }

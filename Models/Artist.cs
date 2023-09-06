@@ -10,6 +10,6 @@ namespace IndivAssessment.Models
         public int? Age { get; set; }
         public string? Bio { get; set; }
 
-        public ICollection<Song>? Songs { get; set; }
+        public List<Song>? Songs { get; set; }
     }
 }
