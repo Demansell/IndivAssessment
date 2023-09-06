@@ -42,11 +42,11 @@ app.MapGet("/api/Song", (IndivAssessmentDbContext db) =>
 
 
 // Add a song
-app.MapPost("/Post Song", (IndivAssessmentDbContext db, Song songs) =>
+app.MapPost("/api/Song", (IndivAssessmentDbContext db, Song songs) =>
 {
     db.Songs.Add(songs);
     db.SaveChanges();
-    return Results.Created($"/songs/{songs.Id}", songs);
+    return Results.Created($"/api/songs/{songs.Id}", songs);
 });
 
 
@@ -87,5 +87,7 @@ app.MapGet("/artists", (IndivAssessmentDbContext db) =>
 {
     return db.Artists.ToList();
 }); */
+
+
 app.Run();
 

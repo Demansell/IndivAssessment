@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace IndivAssessment.Models
 {
     public class Song
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         [Required]
         public string? Title { get; set; }
         public int? ArtistId { get; set; }
