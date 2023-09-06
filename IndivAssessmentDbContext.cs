@@ -1,15 +1,11 @@
-﻿using IndivAssessment.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
-namespace IndivAssessment;
-
+﻿using Microsoft.EntityFrameworkCore;
+using IndivAssessment.Models;
 public class IndivAssessmentDbContext : DbContext
 {
 
-    public DbSet<Artist>? Artist { get; set; }
-    public DbSet<Genre>? Genre { get; set; }
-    public DbSet<Song>? Song { get; set; }
+    public DbSet<Artist>? Artists { get; set; }
+    public DbSet<Genre>? Genres { get; set; }
+    public DbSet<Song>? Songs { get; set; }
     public DbSet<SongGenre>? SongGenre { get; set; }
 
     public IndivAssessmentDbContext(DbContextOptions<IndivAssessmentDbContext> context) : base(context)

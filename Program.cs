@@ -1,8 +1,8 @@
-
+using IndivAssessment.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
-using IndivAssessment;
+using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,10 +34,58 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/Song", (IndivAssessmentDbContext db) =>
+//get songs
+app.MapGet("/api/Song", (IndivAssessmentDbContext db) =>
 {
-    return db.Song.ToList();
+    return db.Songs.ToList();
 });
 
+
+// Add a song
+app.MapPost("/Post Song", (IndivAssessmentDbContext db, Song songs) =>
+{
+    db.Songs.Add(songs);
+    db.SaveChanges();
+    return Results.Created($"/songs/{songs.Id}", songs);
+});
+
+
+
+
+/*update song
+app.MapPut("api/Song/{id}", async (IndivAssessmentDbContext db, int id, Song song) =>
+{
+    Song songToUpdate = await db.Songs.SingleOrDefaultAsync(song => song.Id == id);
+    if (songToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+    songToUpdate.Id = song.Id;
+    songToUpdate.ArtistId = song.ArtistId;
+    songToUpdate.Album = song.Album;
+    songToUpdate.Length = song.Length;
+    songToUpdate.Title = song.Title;
+    db.SaveChanges();
+    return Results.NoContent();
+}); */
+
+/* delete song 
+app.MapDelete("api/Song/{id}", (IndivAssessmentDbContext db, int id) =>
+{
+    Song song = db.Songs.SingleOrDefault(song => song.Id == id);
+    if (song == null)
+    {
+        return Results.NotFound();
+    }
+    db.Songs.Remove(song);
+    db.SaveChanges();
+    return Results.NoContent();
+}); */
+
+/* Get all artists
+app.MapGet("/artists", (IndivAssessmentDbContext db) =>
+{
+    return db.Artists.ToList();
+}); */
 app.Run();
 
