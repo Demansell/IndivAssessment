@@ -49,7 +49,18 @@ app.MapPost("/IndivAssessment/Song", (IndivAssessmentDbContext db, Song songs) =
     return Results.Created($"/api/songs/{songs.Id}", songs);
 });
 
-
+app.MapGet("/tunapiano/songs/{songId}", (IndivAssessmentDbContext db, int songId) =>
+{
+    Song song = db.Songs
+    .Include(s => s.Genres)
+    .Include(s => s.Artists)
+    .FirstOrDefault(s => s.Id == songId);
+    if (song == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(song);
+});
 
 
 /*update song
