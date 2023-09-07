@@ -35,21 +35,22 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 //get songs
-app.MapGet("/api/Song", (IndivAssessmentDbContext db) =>
+app.MapGet("/IndivAssessment/Song", (IndivAssessmentDbContext db) =>
 {
     return db.Songs.ToList();
 });
 
 
 // Add a song
-app.MapPost("/IndivAssessment/Song", (IndivAssessmentDbContext db, Song songs) =>
+app.MapPost("api/Songs", async (IndivAssessmentDbContext db, Song song) =>
 {
-    db.Songs.Add(songs);
+    db.Songs.Add(song);
     db.SaveChanges();
-    return Results.Created($"/api/songs/{songs.Id}", songs);
+    return Results.Created($"/api/songs{song.Id}", song);
 });
 
-app.MapGet("/tunapiano/songs/{songId}", (IndivAssessmentDbContext db, int songId) =>
+// Uncomment this out when going for MVP 
+/*app.MapGet("/tunapiano/songs/{songId}", (IndivAssessmentDbContext db, int songId) =>
 {
     Song song = db.Songs
     .Include(s => s.Genres)
@@ -61,11 +62,11 @@ app.MapGet("/tunapiano/songs/{songId}", (IndivAssessmentDbContext db, int songId
     }
     return Results.Ok(song);
 });
+*/
 
 
-
-/*update song
-app.MapPut("api/Song/{id}", async (IndivAssessmentDbContext db, int id, Song song) =>
+//update song
+app.MapPut("api/Songs/{id}", async (IndivAssessmentDbContext db, int id, Song song) =>
 {
     Song songToUpdate = await db.Songs.SingleOrDefaultAsync(song => song.Id == id);
     if (songToUpdate == null)
@@ -79,10 +80,10 @@ app.MapPut("api/Song/{id}", async (IndivAssessmentDbContext db, int id, Song son
     songToUpdate.Title = song.Title;
     db.SaveChanges();
     return Results.NoContent();
-}); */
+}); 
 
-/* delete song 
-app.MapDelete("api/Song/{id}", (IndivAssessmentDbContext db, int id) =>
+// delete song 
+app.MapDelete("api/Songs/{id}", (IndivAssessmentDbContext db, int id) =>
 {
     Song song = db.Songs.SingleOrDefault(song => song.Id == id);
     if (song == null)
@@ -92,14 +93,92 @@ app.MapDelete("api/Song/{id}", (IndivAssessmentDbContext db, int id) =>
     db.Songs.Remove(song);
     db.SaveChanges();
     return Results.NoContent();
-}); */
+}); 
 
-/* Get all artists
-app.MapGet("/artists", (IndivAssessmentDbContext db) =>
+// Get all artists
+app.MapGet("/Artists", (IndivAssessmentDbContext db) =>
 {
     return db.Artists.ToList();
-}); */
+});
 
+//post artists 
+app.MapPost("api/Artists", async (IndivAssessmentDbContext db, Artist artist) =>
+{
+    db.Artists.Add(artist);
+    db.SaveChanges();
+    return Results.Created($"/api/artists{artist.Id}", artist);
+});
+
+//update artists
+app.MapPut("api/Artists/{id}", async (IndivAssessmentDbContext db, int id, Artist artist) =>
+{
+    Artist artistToUpdate = await db.Artists.SingleOrDefaultAsync(artist => artist.Id == id);
+    if (artistToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+    artistToUpdate.Id = artist.Id;
+    artistToUpdate.Name = artist.Name;
+    artistToUpdate.Age = artist.Age;
+    artistToUpdate.Bio = artist.Bio;
+    db.SaveChanges();
+    return Results.NoContent();
+});
+
+// delete artist 
+app.MapDelete("api/Artists/{id}", (IndivAssessmentDbContext db, int id) =>
+{
+    Artist artist = db.Artists.SingleOrDefault(artist => artist.Id == id);
+    if (artist == null)
+    {
+        return Results.NotFound();
+    }
+    db.Artists.Remove(artist);
+    db.SaveChanges();
+    return Results.NoContent();
+});
+
+// get genre 
+app.MapGet("/Genres", (IndivAssessmentDbContext db) =>
+{
+    return db.Genres.ToList();
+});
+
+//post Genre
+app.MapPost("api/Genre", async (IndivAssessmentDbContext db, Genre genre) =>
+{
+    db.Genres.Add(genre);
+    db.SaveChanges();
+    return Results.Created($"/api/artists{genre.Id}", genre);
+});
+
+// update genre
+app.MapPut("api/Genres/{id}", async (IndivAssessmentDbContext db, int id, Genre genre) =>
+{
+    Genre genreToUpdate = await db.Genres.SingleOrDefaultAsync(genre => genre.Id == id);
+    if (genreToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+    genreToUpdate.Id = genre.Id;
+    genreToUpdate.Description = genre.Description;
+
+    db.SaveChanges();
+    return Results.NoContent();
+});
+
+// delete artist 
+app.MapDelete("api/Genres/{id}", (IndivAssessmentDbContext db, int id) =>
+{
+    Genre genre = db.Genres.SingleOrDefault(genre => genre.Id == id);
+    if (genre == null)
+    {
+        return Results.NotFound();
+    }
+    db.Genres.Remove(genre);
+    db.SaveChanges();
+    return Results.NoContent();
+});
 
 app.Run();
 
