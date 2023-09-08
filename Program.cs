@@ -49,20 +49,34 @@ app.MapPost("api/Songs", async (IndivAssessmentDbContext db, Song song) =>
     return Results.Created($"/api/songs{song.Id}", song);
 });
 
-// Uncomment this out when going for MVP 
-/*app.MapGet("/tunapiano/songs/{songId}", (IndivAssessmentDbContext db, int songId) =>
+//Assign a Genre to a song
+app.MapPost("/api/SongGenre", (IndivAssessmentDbContext db, int songId, int genreId) =>
 {
-    Song song = db.Songs
-    .Include(s => s.Genres)
-    .Include(s => s.Artists)
-    .FirstOrDefault(s => s.Id == songId);
-    if (song == null)
+    var getSong = db.Songs.FirstOrDefault(s => s.Id == songId);
+    var getGenre = db.Genres.FirstOrDefault(g => g.Id == genreId);
+    if (getSong.Genres == null)
     {
-        return Results.NotFound();
+        getSong.Genres = new List<Genre>();
     }
-    return Results.Ok(song);
+
+    getSong.Genres.Add(getGenre);
+    db.SaveChanges();
+    return getSong;
+
+
 });
-*/
+
+//Details view of a single Song and its associated genres and artist details
+
+app.MapGet("/api/SongsDetails", (IndivAssessmentDbContext db, int id) =>
+{
+    var song = db.Songs.Where(s => s.Id == id)
+    .Include(x => x.Genres)
+    .Include(s => s.Artist).ToList();
+
+    return song;
+}
+);
 
 
 //update song
@@ -99,6 +113,13 @@ app.MapDelete("api/Songs/{id}", (IndivAssessmentDbContext db, int id) =>
 app.MapGet("/Artists", (IndivAssessmentDbContext db) =>
 {
     return db.Artists.ToList();
+});
+
+//Details view of a single Artist and the songs associated with them
+app.MapGet("/api/artist/{id}", (IndivAssessmentDbContext db, int id) =>
+{
+    var artist = db.Artists.Where(a => a.Id == id).Include(x => x.Songs).FirstOrDefault();
+    return artist;
 });
 
 //post artists 
@@ -142,6 +163,13 @@ app.MapDelete("api/Artists/{id}", (IndivAssessmentDbContext db, int id) =>
 app.MapGet("/Genres", (IndivAssessmentDbContext db) =>
 {
     return db.Genres.ToList();
+});
+
+//Details view of a single Genre and the songs associated with it
+app.MapGet("/api/genre/{id}", (IndivAssessmentDbContext db, int id) =>
+{
+    var genre = db.Genres.Where(g => g.Id == id).Include(x => x.Songs).FirstOrDefault();
+    return genre;
 });
 
 //post Genre
